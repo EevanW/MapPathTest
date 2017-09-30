@@ -1,0 +1,6 @@
+<resources>
+
+<!--
+    Resource commented because duplicated google_maps_api.xml with google API key
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">Enter you product code where</string>-->
+</resources>
