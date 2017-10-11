@@ -1,10 +1,12 @@
 package samples.iivchenko.mappathtest.service;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Streaming;
+import samples.iivchenko.mappathtest.models.RouteModel;
 
 public interface FileDownloadClient {
+    @Streaming
     @GET("route.txt")
-    Call<ResponseBody> downloadFile();
+    Call<RouteModel> downloadFile();
 }

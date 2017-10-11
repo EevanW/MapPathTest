@@ -1,24 +1,31 @@
 package samples.iivchenko.mappathtest.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 public class RouteModel {
 
     public List<Points> coords;
 
-    public Points getPoint(int pos) {
-        return this.coords.get(pos);
+    public int size() {
+        return this.coords.size();
     }
 
-    class Points {
-        String la;
-        String lo;
+    public LatLng getPoint(int pos) {
+        LatLng ll = new LatLng(this.coords.get(pos).getLa(), this.coords.get(pos).getLo());
+        return ll;
+    }
 
-        public String getLa() {
+    public class Points {
+        double la;
+        double lo;
+
+        public double getLa() {
             return la;
         }
 
-        public String getLo() {
+        public double getLo() {
             return lo;
         }
     }

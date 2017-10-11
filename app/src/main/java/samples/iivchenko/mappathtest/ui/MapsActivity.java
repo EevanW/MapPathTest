@@ -17,18 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import samples.iivchenko.mappathtest.R;
+import samples.iivchenko.mappathtest.models.RouteModel;
 import samples.iivchenko.mappathtest.service.FileDownloadClient;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -61,19 +56,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void downloadFile() {
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://test.www.estaxi.ru/");
+
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://test.www.estaxi.ru/").addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
         FileDownloadClient fileDownloadClient = retrofit.create(FileDownloadClient.class);
-        Call<ResponseBody> call = fileDownloadClient.downloadFile();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<RouteModel> call = fileDownloadClient.downloadFile();
+
+
+        call.enqueue(new Callback<RouteModel>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                boolean success = writeResponseBodyToDisk(response.body());
-                Toast.makeText(MapsActivity.this, "download was success: " + success, Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<RouteModel> call, Response<RouteModel> response) {
+                new PolyLinePainter().paint(getApplicationContext(), mMap, response.body());
+                Toast.makeText(MapsActivity.this, "download was success: ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<RouteModel> call, Throwable t) {
                 Toast.makeText(MapsActivity.this, "no", Toast.LENGTH_SHORT).show();
             }
         });
@@ -93,56 +91,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        LatLng sydney = new LatLng(54.8, 73.1);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Omsk"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
-        try {
-            File futureStudioIconFile = new File(getExternalFilesDir(null) + File.separator + "route.txt");
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            try {
-                byte[] fileReader = new byte[4096];
-
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                }
-
-                outputStream.flush();
-
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            }
-        } catch (IOException e) {
-            return false;
-        }
     }
 
 }
