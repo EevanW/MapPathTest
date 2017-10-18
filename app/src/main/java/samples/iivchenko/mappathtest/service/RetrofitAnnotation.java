@@ -5,7 +5,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Streaming;
 import samples.iivchenko.mappathtest.models.RouteModel;
 
-public interface FileDownloadClient {
+public interface RetrofitAnnotation {
     @Streaming
     @GET("route.txt")
     Call<RouteModel> downloadFile();
