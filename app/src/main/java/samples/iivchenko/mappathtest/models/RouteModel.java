@@ -2,11 +2,22 @@ package samples.iivchenko.mappathtest.models;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RouteModel {
 
-    public List<Points> coords;
+    private List<RoutePoint> coords;
+
+    public RouteModel() {
+    }
+
+    public void addPoint(double la, double lo) {
+        if (this.coords == null) {
+            this.coords = new ArrayList<>();
+        }
+        this.coords.add(new RoutePoint(la, lo));
+    }
 
     public int size() {
         return this.coords.size();
@@ -17,15 +28,20 @@ public class RouteModel {
         return ll;
     }
 
-    public class Points {
-        double la;
-        double lo;
+    class RoutePoint {
+        private double la;
+        private double lo;
 
-        public double getLa() {
+        RoutePoint(double la, double lo) {
+            this.la = la;
+            this.lo = lo;
+        }
+
+        double getLa() {
             return la;
         }
 
-        public double getLo() {
+        double getLo() {
             return lo;
         }
     }
