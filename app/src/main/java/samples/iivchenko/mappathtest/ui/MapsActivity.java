@@ -14,7 +14,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import samples.iivchenko.mappathtest.R;
-import samples.iivchenko.mappathtest.service.FileDownloader;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final int MY_PERMISSION_REQUEST = 300;
@@ -30,7 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FileDownloader().downloadFile(MapsActivity.this, mMap);
+                new IndicateDownloading().downloadFile(MapsActivity.this, mMap);
             }
         });
     }
